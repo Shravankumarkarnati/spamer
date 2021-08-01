@@ -100,9 +100,11 @@ export default function App() {
 
   return (
     <div className="App">
-      <button onClick={onClickDataset}>Change Dataset</button>
-      <button onClick={onClickAddNode}>Add Node</button>
-      <button onClick={onClickRemoveNode}>Remove Node</button>
+      <div className="btnContainer">
+        <button onClick={onClickDataset}>Change Dataset</button>
+        <button onClick={onClickAddNode}>Add Node</button>
+        <button onClick={onClickRemoveNode}>Remove Node</button>
+      </div>
       <div className="timeline-container">
         <svg
           id="timeline-svg"
