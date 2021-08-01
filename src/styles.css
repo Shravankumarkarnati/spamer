@@ -1,0 +1,9 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+#timeline-svg {
+  padding: 2rem;
+  background-color: #eee;
+}
