@@ -1,42 +1,12 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./styles.css";
 import { XAxis } from "./XAxis";
 import { Node } from "./Node";
 
-const dm1 = { x: 500, y: 500 };
-const dm2 = { x: 400, y: 400 };
-
-export default function App() {
-  const [dataset, setDataSet] = useState(true);
-  const [currentDS, setCurrentDS] = useState(dm1);
-  const svgRef = useRef<SVGSVGElement | null>(null);
-
-  const onClick = () => {
-    setCurrentDS(dataset ? dm2 : dm1);
-    setDataSet((prev) => !prev);
-  };
-
-  return (
-    <div className="App">
-      <button onClick={onClick}>Change Dataset</button>
-      <svg
-        id="timeline-svg"
-        width={currentDS.x}
-        height={currentDS.y}
-        ref={svgRef}
-      >
-        <XAxis dimensions={currentDS} />
-        <Node
-          color="blue"
-          text="in"
-          pivotNode
-          dimensions={{ x: currentDS.x / 2, y: (currentDS.y * 3) / 4 }}
-        />
-      </svg>
-    </div>
-  );
+export interface Dimensions {
+  x: number;
+  y: number;
 }
-
 const nodes1 = [
   { text: "jk", daysFromPivot: -3, drawArrow: true },
   { text: "mk", daysFromPivot: -5, drawArrow: true },
@@ -61,3 +31,75 @@ const nodes2 = [
   { text: "fa", daysFromPivot: 32, drawArrow: true },
   { text: "la", daysFromPivot: 40, drawArrow: true }
 ];
+
+export default function App() {
+  const [dataset, setDataSet] = useState(true);
+  const [nodeSet, setNodeSet] = useState(nodes2);
+
+  const [svgDimensions, setSvgDimensions] = useState<Dimensions>({
+    x: 0,
+    y: 0
+  });
+
+  const [axisPositions, setAxisPositions] = useState<{
+    1: Dimensions;
+    2: Dimensions;
+  }>({
+    1: {
+      x: 0,
+      y: 0
+    },
+    2: { x: 0, y: 0 }
+  });
+
+  const svgRef = useRef<SVGSVGElement | null>(null);
+
+  useEffect(() => {
+    if (svgRef.current) {
+      setSvgDimensions({
+        x: svgRef.current.clientWidth,
+        y: svgRef.current.clientHeight
+      });
+      setAxisPositions({
+        1: {
+          x: 0,
+          y: svgRef.current.clientHeight * 0.75
+        },
+        2: {
+          x: svgRef.current.clientWidth,
+          y: svgRef.current.clientHeight * 0.75
+        }
+      });
+    }
+  }, []);
+
+  const onClick = () => {
+    setNodeSet(dataset ? nodes1 : nodes2);
+    setDataSet((prev) => !prev);
+  };
+
+  return (
+    <div className="App">
+      <button onClick={onClick}>Change Dataset</button>
+      <div className="timeline-container">
+        <svg
+          id="timeline-svg"
+          width={svgDimensions.x}
+          height={svgDimensions.y}
+          ref={svgRef}
+        >
+          <XAxis positions={axisPositions} />
+          <Node
+            color="blue"
+            text="in"
+            pivotNode
+            cords={{
+              x: svgDimensions.x / 2,
+              y: (svgDimensions.y * 3) / 4
+            }}
+          />
+        </svg>
+      </div>
+    </div>
+  );
+}

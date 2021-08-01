@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
-import { Dimensions } from "./RenderAxis";
+import { Dimensions } from "./App";
 
-const textFontSize = 12;
-const circleRadius = 20;
+const NODE_TEXT_FONT_SIZE = 12;
+const NODE_RADIUS = 20;
 
 interface Props {
-  readonly dimensions: Dimensions;
+  readonly cords: Dimensions;
   readonly text: string;
   readonly color: string;
   readonly pivotNode?: boolean;
@@ -28,35 +28,35 @@ const PivotNodeStyled = styled.rect(({ color }: NodeSVGStyledProps) => ({
 const TextStyled = styled.text({
   textTransform: "uppercase",
   fill: "white",
-  fontSize: `${textFontSize}px`
+  fontSize: `${NODE_TEXT_FONT_SIZE}px`
 });
 
-export const Node = ({ dimensions, text, color, pivotNode = false }: Props) => {
+export const Node = ({ cords, text, color, pivotNode = false }: Props) => {
   const nodeId = `timeline-node-${text}`;
 
   return (
     <g>
       {pivotNode ? (
         <PivotNodeStyled
-          width={circleRadius * 2}
-          height={circleRadius * 2}
+          width={NODE_RADIUS * 2}
+          height={NODE_RADIUS * 2}
           color={color}
-          x={dimensions.x - circleRadius}
-          y={dimensions.y - circleRadius}
+          x={cords.x - NODE_RADIUS}
+          y={cords.y - NODE_RADIUS}
           rx={5}
         />
       ) : (
         <NodeStyled
           id={nodeId}
           color={color}
-          cx={dimensions.x}
-          cy={dimensions.y}
-          r={circleRadius}
+          cx={cords.x}
+          cy={cords.y}
+          r={NODE_RADIUS}
         />
       )}
       <TextStyled
-        x={dimensions.x - textFontSize / 2}
-        y={dimensions.y + textFontSize / 4}
+        x={cords.x - NODE_TEXT_FONT_SIZE / 2}
+        y={cords.y + NODE_TEXT_FONT_SIZE / 4}
       >
         {text}
       </TextStyled>
