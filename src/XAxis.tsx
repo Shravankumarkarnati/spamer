@@ -14,7 +14,7 @@ export const XAxis = ({
   return (
     <line
       id="popDef-timeline-line"
-      stroke="red"
+      stroke="#eeeccc"
       strokeWidth="5"
       x1={x1}
       x2={x2}

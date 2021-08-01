@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./styles.css";
 import { XAxis } from "./XAxis";
 import { Node } from "./Node";
+import { RenderNodes } from "./RenderNodes";
 
 export interface Dimensions {
   x: number;
@@ -31,6 +32,8 @@ const nodes2 = [
   { text: "fa", daysFromPivot: 32, drawArrow: true },
   { text: "la", daysFromPivot: 40, drawArrow: true }
 ];
+
+const newNode = { text: "hg", daysFromPivot: -25, drawArrow: true };
 
 export default function App() {
   const [dataset, setDataSet] = useState(true);
@@ -73,14 +76,33 @@ export default function App() {
     }
   }, []);
 
-  const onClick = () => {
+  const onClickDataset = () => {
     setNodeSet(dataset ? nodes1 : nodes2);
     setDataSet((prev) => !prev);
   };
 
+  const onClickAddNode = () => {
+    let newSet = [];
+    if (dataset) {
+      newSet = [...nodes2, newNode];
+    } else {
+      newSet = [...nodes1, newNode];
+    }
+    setNodeSet(newSet);
+  };
+
+  const onClickRemoveNode = () => {
+    const remEle = Math.round(Math.random() * nodeSet.length);
+    const newNodeSet = [...nodeSet];
+    newNodeSet.splice(remEle, 1);
+    setNodeSet(newNodeSet);
+  };
+
   return (
     <div className="App">
-      <button onClick={onClick}>Change Dataset</button>
+      <button onClick={onClickDataset}>Change Dataset</button>
+      <button onClick={onClickAddNode}>Add Node</button>
+      <button onClick={onClickRemoveNode}>Remove Node</button>
       <div className="timeline-container">
         <svg
           id="timeline-svg"
@@ -89,13 +111,18 @@ export default function App() {
           ref={svgRef}
         >
           <XAxis positions={axisPositions} />
+          <RenderNodes
+            data={nodeSet}
+            axisWidth={svgDimensions.x}
+            yCord={axisPositions[2].y}
+          />
           <Node
             color="blue"
             text="in"
             pivotNode
             cords={{
               x: svgDimensions.x / 2,
-              y: (svgDimensions.y * 3) / 4
+              y: axisPositions[2].y
             }}
           />
         </svg>
