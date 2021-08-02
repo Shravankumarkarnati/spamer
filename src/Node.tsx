@@ -1,8 +1,6 @@
 import styled from "@emotion/styled";
 import { Dimensions } from "./App";
-
-const NODE_TEXT_FONT_SIZE = 12;
-const NODE_RADIUS = 20;
+import { NODE_TEXT_FONT_SIZE, NODE_RADIUS } from "./constants";
 
 interface Props {
   readonly cords: Dimensions;

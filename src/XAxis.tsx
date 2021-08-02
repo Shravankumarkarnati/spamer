@@ -1,14 +1,14 @@
 import React from "react";
-import { Dimensions } from "./App";
+import { AxisPositions } from "./App";
 
-interface Props {
-  positions: { 1: Dimensions; 2: Dimensions };
+export interface Props {
+  positions: AxisPositions;
 }
 
 export const XAxis = ({
   positions: {
-    1: { x: x1, y: y1 },
-    2: { x: x2, y: y2 }
+    start: { x: x1, y: y1 },
+    end: { x: x2, y: y2 }
   }
 }: Props) => {
   return (

@@ -3,57 +3,35 @@ import "./styles.css";
 import { XAxis } from "./XAxis";
 import { Node } from "./Node";
 import { RenderNodes } from "./RenderNodes";
+import {
+  nodes1,
+  nodes2,
+  newNode,
+  initial_axis_positions,
+  initial_svg_dimensions
+} from "./constants";
 
 export interface Dimensions {
   x: number;
   y: number;
 }
-const nodes1 = [
-  { text: "jk", daysFromPivot: -3, drawArrow: true },
-  { text: "mk", daysFromPivot: -5, drawArrow: true },
-  { text: "ga", daysFromPivot: -6, drawArrow: true },
-  { text: "qs", daysFromPivot: -20, drawArrow: true },
-  { text: "sk", daysFromPivot: -23, drawArrow: true },
-  { text: "gt", daysFromPivot: -26, drawArrow: true },
-  { text: "oa", daysFromPivot: -29, drawArrow: true },
-  { text: "pg", daysFromPivot: -39, drawArrow: true },
-  { text: "sa", daysFromPivot: 13, drawArrow: true },
-  { text: "qw", daysFromPivot: 26, drawArrow: true },
-  { text: "fg", daysFromPivot: 33, drawArrow: true },
-  { text: "pa", daysFromPivot: 39, drawArrow: true }
-];
 
-const nodes2 = [
-  { text: "gp", daysFromPivot: -9, drawArrow: true },
-  { text: "ms", daysFromPivot: -15, drawArrow: true },
-  { text: "md", daysFromPivot: -22, drawArrow: true },
-  { text: "po", daysFromPivot: -38, drawArrow: true },
-  { text: "qq", daysFromPivot: 22, drawArrow: true },
-  { text: "fa", daysFromPivot: 32, drawArrow: true },
-  { text: "la", daysFromPivot: 40, drawArrow: true }
-];
-
-const newNode = { text: "hg", daysFromPivot: -25, drawArrow: true };
+export interface AxisPositions {
+  start: Dimensions;
+  end: Dimensions;
+}
 
 export default function App() {
   const [dataset, setDataSet] = useState(true);
   const [nodeSet, setNodeSet] = useState(nodes2);
 
-  const [svgDimensions, setSvgDimensions] = useState<Dimensions>({
-    x: 0,
-    y: 0
-  });
+  const [svgDimensions, setSvgDimensions] = useState<Dimensions>(
+    initial_svg_dimensions
+  );
 
-  const [axisPositions, setAxisPositions] = useState<{
-    1: Dimensions;
-    2: Dimensions;
-  }>({
-    1: {
-      x: 0,
-      y: 0
-    },
-    2: { x: 0, y: 0 }
-  });
+  const [axisPositions, setAxisPositions] = useState<AxisPositions>(
+    initial_axis_positions
+  );
 
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -64,11 +42,11 @@ export default function App() {
         y: svgRef.current.clientHeight
       });
       setAxisPositions({
-        1: {
+        start: {
           x: 0,
           y: svgRef.current.clientHeight * 0.75
         },
-        2: {
+        end: {
           x: svgRef.current.clientWidth,
           y: svgRef.current.clientHeight * 0.75
         }
@@ -116,7 +94,7 @@ export default function App() {
           <RenderNodes
             data={nodeSet}
             axisWidth={svgDimensions.x}
-            yCord={axisPositions[2].y}
+            yCord={axisPositions.end.y}
           />
           <Node
             color="blue"
@@ -124,7 +102,7 @@ export default function App() {
             pivotNode
             cords={{
               x: svgDimensions.x / 2,
-              y: axisPositions[2].y
+              y: axisPositions.end.y
             }}
           />
         </svg>
