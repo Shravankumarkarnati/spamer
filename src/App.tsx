@@ -7,7 +7,8 @@ import {
   nodes1,
   nodes2,
   initial_axis_positions,
-  initial_svg_dimensions
+  initial_svg_dimensions,
+  ARROW_HEAD_BUFFER_X
 } from "./constants";
 
 import { generateNode } from "./generateNode";
@@ -39,7 +40,7 @@ export default function App() {
   useEffect(() => {
     if (svgRef.current) {
       setSvgDimensions({
-        x: svgRef.current.clientWidth,
+        x: svgRef.current.clientWidth - ARROW_HEAD_BUFFER_X,
         y: svgRef.current.clientHeight
       });
       setAxisPositions({
@@ -48,7 +49,7 @@ export default function App() {
           y: svgRef.current.clientHeight * 0.75
         },
         end: {
-          x: svgRef.current.clientWidth,
+          x: svgRef.current.clientWidth - ARROW_HEAD_BUFFER_X,
           y: svgRef.current.clientHeight * 0.75
         }
       });

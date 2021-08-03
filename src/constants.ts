@@ -2,6 +2,8 @@ export const NODE_TEXT_FONT_SIZE = 12;
 export const NODE_RADIUS = 20;
 export const CONNECT_STEP_GUTTER = 10;
 export const CONNECT_ARC_RADIUS = 5;
+export const ARROW_HEAD_BUFFER_X = 15;
+export const ARROW_HEAD_BUFFER_Y = 10;
 
 export const nodes1 = [
   { text: "jk", daysFromPivot: -3, drawArrow: true },

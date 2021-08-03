@@ -64,7 +64,7 @@ export const Connect = ({
   return (
     <svg>
       <path d={pathD} fill="none" stroke={color} strokeWidth={2} />
-      {color === "#e31a1c" && (
+      {/* {color === "#e31a1c" && (
         <>
           <rect
             x={horizontalLength / 2 + pivotHead - 16}
@@ -83,7 +83,7 @@ export const Connect = ({
             {color}
           </text>
         </>
-      )}
+      )} */}
     </svg>
   );
 };
