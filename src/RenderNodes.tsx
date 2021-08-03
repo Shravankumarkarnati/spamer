@@ -1,5 +1,6 @@
 import { schemePaired } from "d3";
 import { useEffect, useState } from "react";
+import { Connect } from "./Connect";
 import { Node } from "./Node";
 
 const calculateMaxTime = (times: number[]) => {
@@ -23,6 +24,9 @@ interface NodeData {
   xCord: number;
   yCord: number;
   color: string;
+  drawArrow: boolean;
+  direction: "left" | "right";
+  step: number;
 }
 
 const calcCordX = (axisWidth: number, maxTime: number, time: number) => {
@@ -38,25 +42,70 @@ export const RenderNodes = ({ data, axisWidth, yCord }: Props) => {
   const maxTime = calculateMaxTime(data.map((cur) => cur.daysFromPivot));
 
   useEffect(() => {
-    const temp = data.map((cur, index) => ({
-      text: cur.text,
-      yCord,
-      xCord: calcCordX(axisWidth, maxTime, cur.daysFromPivot),
-      color: schemePaired[index]!
-    }));
+    const temp = data.map((cur, index) => {
+      const xCord = calcCordX(axisWidth, maxTime, cur.daysFromPivot);
+      const direction = xCord < axisWidth / 2 ? "left" : "right";
+      return {
+        text: cur.text,
+        yCord,
+        xCord,
+        color: schemePaired[index]!,
+        drawArrow: cur.drawArrow,
+        direction: direction as "left" | "right",
+        step: 0
+      };
+    });
+    const orderedXCords = temp
+      .map((cur) => ({ key: cur.text, xCord: cur.xCord }))
+      .sort((a, b) => a.xCord - b.xCord);
+
+    const mid = orderedXCords.findIndex((cur) => cur.xCord >= axisWidth / 2);
+
+    const leftNodes = orderedXCords.slice(0, mid);
+    const rightNodes = orderedXCords.slice(mid);
+
+    leftNodes.sort((a, b) => b.xCord - a.xCord);
+
+    leftNodes.forEach((cur, index) => {
+      temp.forEach((t) => {
+        if (t.text === cur.key) {
+          t.step = index + 1;
+        }
+      });
+    });
+
+    rightNodes.forEach((cur, index) => {
+      temp.forEach((t) => {
+        if (t.text === cur.key) {
+          t.step = index + 1;
+        }
+      });
+    });
+
     setNodes(temp);
   }, [data, axisWidth, yCord, maxTime]);
 
   return (
     <g>
-      {nodes.map((cur) => (
-        <Node
-          cords={{ x: cur.xCord, y: cur.yCord }}
-          pivotNode={false}
-          color={cur.color}
-          text={cur.text}
-          key={cur.text}
-        />
+      {nodes.map((cur, index) => (
+        <g key={cur.text}>
+          <Node
+            cords={{ x: cur.xCord, y: cur.yCord }}
+            pivotNode={false}
+            color={cur.color}
+            text={cur.text}
+          />
+          {cur.drawArrow && (
+            <Connect
+              step={cur.step}
+              direction={cur.direction}
+              pivotNodeX={axisWidth / 2}
+              targetNodeX={cur.xCord}
+              axisY={cur.yCord}
+              color={cur.color}
+            />
+          )}
+        </g>
       ))}
     </g>
   );
