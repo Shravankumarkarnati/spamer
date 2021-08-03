@@ -5,7 +5,7 @@ export const generateNode = () => {
   for (var i = 0; i < 2; i++) {
     text += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  const daysFromPivot = Math.round(Math.random() * 100);
+  const daysFromIndex = Math.round(Math.random() * 100);
   const randomSign = Math.random() < 0.5 ? -1 : 1;
-  return { text, daysFromPivot: daysFromPivot * randomSign, drawArrow: true };
+  return { text, daysFromIndex: daysFromIndex * randomSign, drawArrow: true };
 };

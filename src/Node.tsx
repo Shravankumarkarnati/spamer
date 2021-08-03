@@ -6,7 +6,7 @@ interface Props {
   readonly cords: Dimensions;
   readonly text: string;
   readonly color: string;
-  readonly pivotNode?: boolean;
+  readonly indexNode?: boolean;
 }
 
 interface NodeSVGStyledProps {
@@ -18,7 +18,7 @@ const NodeStyled = styled.circle(({ color }: NodeSVGStyledProps) => ({
   fill: color
 }));
 
-const PivotNodeStyled = styled.rect(({ color }: NodeSVGStyledProps) => ({
+const IndexNodeStyled = styled.rect(({ color }: NodeSVGStyledProps) => ({
   textTransform: "uppercase",
   fill: color
 }));
@@ -29,13 +29,13 @@ const TextStyled = styled.text({
   fontSize: `${NODE_TEXT_FONT_SIZE}px`
 });
 
-export const Node = ({ cords, text, color, pivotNode = false }: Props) => {
+export const Node = ({ cords, text, color, indexNode = false }: Props) => {
   const nodeId = `timeline-node-${text}`;
 
   return (
     <g>
-      {pivotNode ? (
-        <PivotNodeStyled
+      {indexNode ? (
+        <IndexNodeStyled
           width={NODE_RADIUS * 2}
           height={NODE_RADIUS * 2}
           color={color}

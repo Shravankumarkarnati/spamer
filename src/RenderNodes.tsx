@@ -10,7 +10,7 @@ const calculateMaxTime = (times: number[]) => {
 
 interface Datum {
   text: string;
-  daysFromPivot: number;
+  daysFromIndex: number;
   drawArrow: boolean;
 }
 
@@ -40,11 +40,11 @@ const calcCordX = (axisWidth: number, maxTime: number, time: number) => {
 
 export const RenderNodes = ({ data, axisWidth, yCord }: Props) => {
   const [nodes, setNodes] = useState<NodeData[]>([]);
-  const maxTime = calculateMaxTime(data.map((cur) => cur.daysFromPivot));
+  const maxTime = calculateMaxTime(data.map((cur) => cur.daysFromIndex));
 
   useEffect(() => {
     const temp = data.map((cur, index) => {
-      const xCord = calcCordX(axisWidth, maxTime, cur.daysFromPivot);
+      const xCord = calcCordX(axisWidth, maxTime, cur.daysFromIndex);
       const direction = xCord < axisWidth / 2 ? "left" : "right";
       return {
         text: cur.text,
@@ -66,7 +66,7 @@ export const RenderNodes = ({ data, axisWidth, yCord }: Props) => {
         <g key={cur.text}>
           <Node
             cords={{ x: cur.xCord, y: cur.yCord }}
-            pivotNode={false}
+            indexNode={false}
             color={cur.color}
             text={cur.text}
           />
@@ -74,7 +74,7 @@ export const RenderNodes = ({ data, axisWidth, yCord }: Props) => {
             <Connect
               step={cur.step}
               direction={cur.direction}
-              pivotNodeX={axisWidth / 2}
+              indexNodeX={axisWidth / 2}
               targetNodeX={cur.xCord}
               axisY={cur.yCord}
               color={cur.color}

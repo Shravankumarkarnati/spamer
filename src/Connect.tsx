@@ -7,7 +7,7 @@ import {
 interface Props {
   step: number;
   direction: "left" | "right";
-  pivotNodeX: number;
+  indexNodeX: number;
   targetNodeX: number;
   axisY: number;
   color: string;
@@ -17,7 +17,7 @@ interface Props {
 export const Connect = ({
   step,
   direction,
-  pivotNodeX,
+  indexNodeX,
   targetNodeX,
   axisY,
   color,
@@ -26,10 +26,10 @@ export const Connect = ({
   const stepMargin = step * CONNECT_STEP_GUTTER;
   const headMargin = (step * NODE_RADIUS) / (totalNumberOfConnections / 2 + 1); // nodes.length / 2 + 1
 
-  const pivotHead =
+  const indexHead =
     direction === "left"
-      ? pivotNodeX - NODE_RADIUS + headMargin
-      : pivotNodeX + NODE_RADIUS - headMargin;
+      ? indexNodeX - NODE_RADIUS + headMargin
+      : indexNodeX + NODE_RADIUS - headMargin;
 
   const targetHead = targetNodeX;
   const yCord = axisY - NODE_RADIUS;
@@ -37,7 +37,7 @@ export const Connect = ({
   const verticalLength = stepMargin;
   const horizontalLength =
     targetHead -
-    pivotHead +
+    indexHead +
     CONNECT_ARC_RADIUS * 2 * (direction === "left" ? 1 : -1);
 
   const arcs =
@@ -51,11 +51,11 @@ export const Connect = ({
           `a${CONNECT_ARC_RADIUS},${CONNECT_ARC_RADIUS} 0 0 1 ${CONNECT_ARC_RADIUS},${CONNECT_ARC_RADIUS}`
         ];
 
-  // pivotNodeHead -> pivotNodeHead-step
-  // pivotNodeHead-step -> targetNode-step
+  // indexNodeHead -> indexNodeHead-step
+  // indexNodeHead-step -> targetNode-step
   // targetNode-step -> targetNode
 
-  const pathD = `M${pivotHead},${yCord}  v${-verticalLength} 
+  const pathD = `M${indexHead},${yCord}  v${-verticalLength} 
   ${arcs[0]}
   h${horizontalLength}
   ${arcs[1]}
@@ -67,7 +67,7 @@ export const Connect = ({
       {/* {color === "#e31a1c" && (
         <>
           <rect
-            x={horizontalLength / 2 + pivotHead - 16}
+            x={horizontalLength / 2 + indexHead - 16}
             y={yCord - verticalLength - 16}
             width={80}
             height={20}
@@ -75,7 +75,7 @@ export const Connect = ({
             fill={color}
           />
           <text
-            x={horizontalLength / 2 + pivotHead}
+            x={horizontalLength / 2 + indexHead}
             y={yCord - verticalLength}
             fontSize="0.5rem"
             fill="white"

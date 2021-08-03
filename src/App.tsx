@@ -8,7 +8,8 @@ import {
   nodes2,
   initial_axis_positions,
   initial_svg_dimensions,
-  ARROW_HEAD_BUFFER_X
+  ARROW_HEAD_BUFFER_X,
+  INDEX_NODE_COLOR
 } from "./constants";
 
 import { generateNode } from "./generateNode";
@@ -101,9 +102,9 @@ export default function App() {
             yCord={axisPositions.end.y}
           />
           <Node
-            color="blue"
+            color={INDEX_NODE_COLOR}
             text="in"
-            pivotNode
+            indexNode
             cords={{
               x: svgDimensions.x / 2,
               y: axisPositions.end.y

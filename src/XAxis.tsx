@@ -1,6 +1,10 @@
 import React from "react";
 import { AxisPositions } from "./App";
-import { ARROW_HEAD_BUFFER_Y, ARROW_HEAD_BUFFER_X } from "./constants";
+import {
+  ARROW_HEAD_BUFFER_Y,
+  ARROW_HEAD_BUFFER_X,
+  AXIS_COLOR
+} from "./constants";
 
 export interface Props {
   positions: AxisPositions;
@@ -13,21 +17,21 @@ export const XAxis = ({
   }
 }: Props) => {
   const arrowHeadPoints = `${x2},${y1 - ARROW_HEAD_BUFFER_Y} ${x2},${
-    y2 + ARROW_HEAD_BUFFER_Y
+    y1 + ARROW_HEAD_BUFFER_Y
   } ${x2 + ARROW_HEAD_BUFFER_X},${y1}`;
 
   return (
     <g>
       <line
         id="popDef-timeline-line"
-        stroke="#eeeccc"
-        strokeWidth="5"
+        stroke={AXIS_COLOR}
+        strokeWidth="3"
         x1={x1}
         x2={x2}
         y1={y1}
         y2={y2}
       />
-      <polygon points={arrowHeadPoints} fill="#eeeccc" />
+      <polygon points={arrowHeadPoints} fill={AXIS_COLOR} />
     </g>
   );
 };
