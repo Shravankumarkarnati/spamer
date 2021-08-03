@@ -1,6 +1,7 @@
 export const NODE_TEXT_FONT_SIZE = 12;
 export const NODE_RADIUS = 20;
 export const CONNECT_STEP_GUTTER = 10;
+export const CONNECT_ARC_RADIUS = 5;
 
 export const nodes1 = [
   { text: "jk", daysFromPivot: -3, drawArrow: true },
@@ -13,8 +14,7 @@ export const nodes1 = [
   { text: "pg", daysFromPivot: -39, drawArrow: true },
   { text: "sa", daysFromPivot: 13, drawArrow: true },
   { text: "qw", daysFromPivot: 26, drawArrow: true },
-  { text: "fg", daysFromPivot: 33, drawArrow: true },
-  { text: "pa", daysFromPivot: 39, drawArrow: true }
+  { text: "fg", daysFromPivot: 33, drawArrow: true }
 ];
 
 export const nodes2 = [
