@@ -63,7 +63,6 @@ export default function App() {
   const onClickAddNode = () => {
     let newSet = [];
     const newNode = generateNode();
-    console.log(newNode, "newNode");
 
     if (dataset) {
       newSet = [...nodes2, newNode];

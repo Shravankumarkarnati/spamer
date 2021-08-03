@@ -2,6 +2,7 @@ import { schemePaired } from "d3";
 import { useEffect, useState } from "react";
 import { Connect } from "./Connect";
 import { Node } from "./Node";
+import { getSteps } from "./getSteps";
 
 const calculateMaxTime = (times: number[]) => {
   return Math.max(...times.map((cur) => Math.abs(cur)));
@@ -19,7 +20,7 @@ interface Props {
   yCord: number;
 }
 
-interface NodeData {
+export interface NodeData {
   text: string;
   xCord: number;
   yCord: number;
@@ -55,34 +56,8 @@ export const RenderNodes = ({ data, axisWidth, yCord }: Props) => {
         step: 0
       };
     });
-    const orderedXCords = temp
-      .map((cur) => ({ key: cur.text, xCord: cur.xCord }))
-      .sort((a, b) => a.xCord - b.xCord);
 
-    const mid = orderedXCords.findIndex((cur) => cur.xCord >= axisWidth / 2);
-
-    const leftNodes = orderedXCords.slice(0, mid);
-    const rightNodes = orderedXCords.slice(mid);
-
-    leftNodes.sort((a, b) => b.xCord - a.xCord);
-
-    leftNodes.forEach((cur, index) => {
-      temp.forEach((t) => {
-        if (t.text === cur.key) {
-          t.step = index + 1;
-        }
-      });
-    });
-
-    rightNodes.forEach((cur, index) => {
-      temp.forEach((t) => {
-        if (t.text === cur.key) {
-          t.step = index + 1;
-        }
-      });
-    });
-
-    setNodes(temp);
+    setNodes(getSteps(temp, axisWidth));
   }, [data, axisWidth, yCord, maxTime]);
 
   return (
