@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 import { Dimensions } from "./App";
-import { NODE_TEXT_FONT_SIZE, NODE_RADIUS } from "./constants";
+import {
+  NODE_TEXT_FONT_SIZE,
+  NODE_RADIUS,
+  INDEX_NODE_RADIUS
+} from "./constants";
 
 interface Props {
   readonly cords: Dimensions;
@@ -36,11 +40,11 @@ export const Node = ({ cords, text, color, indexNode = false }: Props) => {
     <g>
       {indexNode ? (
         <IndexNodeStyled
-          width={NODE_RADIUS * 2}
-          height={NODE_RADIUS * 2}
+          width={INDEX_NODE_RADIUS * 2}
+          height={INDEX_NODE_RADIUS * 2}
           color={color}
-          x={cords.x - NODE_RADIUS}
-          y={cords.y - NODE_RADIUS}
+          x={cords.x - INDEX_NODE_RADIUS}
+          y={cords.y - INDEX_NODE_RADIUS}
           rx={5}
         />
       ) : (

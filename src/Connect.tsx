@@ -1,7 +1,8 @@
 import {
   CONNECT_STEP_GUTTER,
   NODE_RADIUS,
-  CONNECT_ARC_RADIUS
+  CONNECT_ARC_RADIUS,
+  CONNECT_PATH_STROKE_WIDTH
 } from "./constants";
 
 interface Props {
@@ -63,7 +64,12 @@ export const Connect = ({
 
   return (
     <svg>
-      <path d={pathD} fill="none" stroke={color} strokeWidth={2} />
+      <path
+        d={pathD}
+        fill="none"
+        stroke={color}
+        strokeWidth={CONNECT_PATH_STROKE_WIDTH}
+      />
       {/* {color === "#e31a1c" && (
         <>
           <rect
