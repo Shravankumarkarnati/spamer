@@ -103,6 +103,10 @@ export const RenderNodes = ({ data, axisWidth, yCord }: Props) => {
               targetNodeX={cur.xCord}
               axisY={cur.yCord}
               color={cur.color}
+              totalNumberOfConnections={nodes.reduce(
+                (acc, cur) => acc + (cur.drawArrow ? 1 : 0),
+                0
+              )}
             />
           )}
         </g>

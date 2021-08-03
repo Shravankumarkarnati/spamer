@@ -6,10 +6,11 @@ import { RenderNodes } from "./RenderNodes";
 import {
   nodes1,
   nodes2,
-  newNode,
   initial_axis_positions,
   initial_svg_dimensions
 } from "./constants";
+
+import { generateNode } from "./generateNode";
 
 export interface Dimensions {
   x: number;
@@ -61,6 +62,9 @@ export default function App() {
 
   const onClickAddNode = () => {
     let newSet = [];
+    const newNode = generateNode();
+    console.log(newNode, "newNode");
+
     if (dataset) {
       newSet = [...nodes2, newNode];
     } else {

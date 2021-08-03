@@ -7,6 +7,7 @@ interface Props {
   targetNodeX: number;
   axisY: number;
   color: string;
+  totalNumberOfConnections: number;
 }
 
 export const Connect = ({
@@ -15,10 +16,11 @@ export const Connect = ({
   pivotNodeX,
   targetNodeX,
   axisY,
-  color
+  color,
+  totalNumberOfConnections
 }: Props) => {
   const stepMargin = step * CONNECT_STEP_GUTTER;
-  const headMargin = (step * NODE_RADIUS) / 4.5; //nodes.length / 2 + 1
+  const headMargin = (step * NODE_RADIUS) / (totalNumberOfConnections / 2 + 1); // nodes.length / 2 + 1
 
   const pivotHead =
     direction === "left"

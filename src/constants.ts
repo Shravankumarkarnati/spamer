@@ -27,8 +27,6 @@ export const nodes2 = [
   { text: "la", daysFromPivot: 40, drawArrow: true }
 ];
 
-export const newNode = { text: "hg", daysFromPivot: -25, drawArrow: true };
-
 export const initial_axis_positions = {
   start: {
     x: 0,
