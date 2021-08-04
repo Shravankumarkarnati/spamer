@@ -1,10 +1,6 @@
 import styled from "@emotion/styled";
 import { Dimensions } from "./App";
-import {
-  NODE_TEXT_FONT_SIZE,
-  NODE_RADIUS,
-  INDEX_NODE_RADIUS
-} from "./constants";
+import { NODE_RADIUS } from "./constants";
 
 interface Props {
   readonly cords: Dimensions;
@@ -13,55 +9,46 @@ interface Props {
   readonly indexNode?: boolean;
 }
 
-interface NodeSVGStyledProps {
+interface NodeStyledProps {
   readonly color: string;
+  readonly top: number;
+  readonly left: number;
+  readonly index?: boolean;
 }
 
-const NodeStyled = styled.circle(({ color }: NodeSVGStyledProps) => ({
-  textTransform: "uppercase",
-  fill: color
-}));
+const NodeStyled = styled.div(
+  ({ color, top, left, index = false }: NodeStyledProps) => ({
+    backgroundColor: color,
+    color: "#fff",
+    fontSize: ".5rem",
+    textTransform: "uppercase",
 
-const IndexNodeStyled = styled.rect(({ color }: NodeSVGStyledProps) => ({
-  textTransform: "uppercase",
-  fill: color
-}));
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: index ? NODE_RADIUS * 2.5 : NODE_RADIUS * 2,
+    height: index ? NODE_RADIUS * 2.5 : NODE_RADIUS * 2,
+    borderRadius: index ? "5px" : "50%",
 
-const TextStyled = styled.text({
-  textTransform: "uppercase",
-  fill: "white",
-  fontSize: `${NODE_TEXT_FONT_SIZE}px`
-});
+    position: "absolute",
+    top,
+    left,
+    transform: "translate(-50%,-50%)"
+  })
+);
 
 export const Node = ({ cords, text, color, indexNode = false }: Props) => {
   const nodeId = `timeline-node-${text}`;
 
   return (
-    <g>
-      {indexNode ? (
-        <IndexNodeStyled
-          width={INDEX_NODE_RADIUS * 2}
-          height={INDEX_NODE_RADIUS * 2}
-          color={color}
-          x={cords.x - INDEX_NODE_RADIUS}
-          y={cords.y - INDEX_NODE_RADIUS}
-          rx={5}
-        />
-      ) : (
-        <NodeStyled
-          id={nodeId}
-          color={color}
-          cx={cords.x}
-          cy={cords.y}
-          r={NODE_RADIUS}
-        />
-      )}
-      <TextStyled
-        x={cords.x - NODE_TEXT_FONT_SIZE / 2}
-        y={cords.y + NODE_TEXT_FONT_SIZE / 4}
-      >
-        {text}
-      </TextStyled>
-    </g>
+    <NodeStyled
+      id={nodeId}
+      index={indexNode}
+      color={color}
+      top={cords.y}
+      left={cords.x}
+    >
+      {text}
+    </NodeStyled>
   );
 };
