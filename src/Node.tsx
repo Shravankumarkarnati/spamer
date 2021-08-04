@@ -7,7 +7,7 @@ interface Props {
   readonly cords: Dimensions;
   readonly text: string;
   readonly color: string;
-  readonly labelDimensions: Dimensions | null;
+  readonly labelDimensions?: Dimensions;
   readonly indexNode?: boolean;
 }
 
