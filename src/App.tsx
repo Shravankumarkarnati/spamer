@@ -1,11 +1,11 @@
+import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
+import { INDEX_NODE_COLOR, nodes1, nodes2 } from "./constants";
+import { generateNode } from "./generateNode";
+import { Node } from "./Node";
+import { RenderNodes } from "./RenderNodes";
 import "./styles.css";
 import { XAxis } from "./XAxis";
-import { INDEX_NODE_COLOR, nodes1, nodes2 } from "./constants";
-
-import { generateNode } from "./generateNode";
-import styled from "@emotion/styled";
-import { Node } from "./Node";
 
 export interface Dimensions {
   x: number;
@@ -82,27 +82,18 @@ export default function App() {
           axisPositions={axisPositions}
           timelineDimensions={timelineDimensions}
         />
+        <RenderNodes
+          data={nodeSet}
+          axisWidth={axisPositions.x}
+          yCord={axisPositions.y}
+        />
         <Node
           color={INDEX_NODE_COLOR}
           text="in"
           indexNode
           cords={{ x: axisPositions.x / 2, y: axisPositions.y }}
+          labelDimensions={null}
         />
-
-        {/* <RenderNodes
-          data={nodeSet}
-          axisWidth={timelineDimensions.x}
-          yCord={axisPositions.end.y}
-        />
-        <Node
-          color={INDEX_NODE_COLOR}
-          text="in"
-          indexNode
-          cords={{
-            x: timelineDimensions.x / 2,
-            y: axisPositions.end.y
-          }}
-        /> */}
       </TimelineContainerStyled>
     </div>
   );

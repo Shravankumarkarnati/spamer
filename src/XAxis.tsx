@@ -12,10 +12,11 @@ interface Props {
   timelineDimensions: Dimensions;
 }
 
-const SvgStyled = styled.svg({
+export const SvgStyled = styled.svg({
   position: "absolute",
   top: 0,
-  left: 0
+  left: 0,
+  zIndex: 1
 });
 
 export const XAxis = ({

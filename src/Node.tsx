@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useState } from "react";
 import { Dimensions } from "./App";
 import { NODE_RADIUS } from "./constants";
 
@@ -6,6 +7,7 @@ interface Props {
   readonly cords: Dimensions;
   readonly text: string;
   readonly color: string;
+  readonly labelDimensions: Dimensions | null;
   readonly indexNode?: boolean;
 }
 
@@ -33,22 +35,72 @@ const NodeStyled = styled.div(
     position: "absolute",
     top,
     left,
-    transform: "translate(-50%,-50%)"
+    zIndex: 2,
+    transform: "translate(-50%,-50%)",
+    cursor: "pointer",
+
+    "&:hover": {
+      transform: "translate(-50%,-50%) scale(1.1)",
+      zIndex: 100
+    }
   })
 );
 
-export const Node = ({ cords, text, color, indexNode = false }: Props) => {
+interface LabelStyledProps {
+  top: number;
+  left: number;
+  color: string;
+}
+
+const LabelStyled = styled.span(({ top, left, color }: LabelStyledProps) => ({
+  position: "absolute",
+  top,
+  left,
+  fontSize: ".5rem",
+  color: "white",
+  backgroundColor: color,
+  padding: ".5rem",
+  transform: "translate(-50%,-50%)",
+  zIndex: 3
+}));
+
+export const Node = ({
+  cords,
+  text,
+  color,
+  labelDimensions,
+  indexNode = false
+}: Props) => {
   const nodeId = `timeline-node-${text}`;
+  const [focused, setFocused] = useState(false);
 
   return (
-    <NodeStyled
-      id={nodeId}
-      index={indexNode}
-      color={color}
-      top={cords.y}
-      left={cords.x}
-    >
-      {text}
-    </NodeStyled>
+    <>
+      <NodeStyled
+        id={nodeId}
+        index={indexNode}
+        color={color}
+        top={cords.y}
+        left={cords.x}
+        onMouseEnter={() => {
+          setFocused(true);
+        }}
+        onMouseLeave={() => {
+          setFocused(false);
+        }}
+      >
+        {text}
+      </NodeStyled>
+      {labelDimensions && focused && (
+        <LabelStyled
+          id="node-label"
+          top={labelDimensions.y}
+          left={labelDimensions.x}
+          color={color}
+        >
+          {text}
+        </LabelStyled>
+      )}
+    </>
   );
 };
