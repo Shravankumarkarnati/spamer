@@ -1,50 +1,47 @@
 import styled from "@emotion/styled";
+import { observer } from "mobx-react-lite";
 import { useContext, useEffect, useRef } from "react";
-import { AppContext } from "./Context";
 import { Node } from "./Node";
+import { TimelineStore } from "./Store";
 import { XAxis } from "./XAxis";
 
 const TimelineContainerStyled = styled.div({
   position: "relative"
 });
 
-export const Timeline = () => {
-  const context = useContext(AppContext);
-
+export const Timeline = observer(() => {
   const timelineRef = useRef<HTMLDivElement | null>(null);
+  const {
+    addTimelineDimensions,
+    axisPositions,
+    timelineDimensions,
+    indexEvent
+  } = useContext(TimelineStore);
 
   useEffect(() => {
     if (timelineRef.current) {
-      const { changeContext } = context;
-
       const [x, y] = [
         timelineRef.current.clientWidth,
         timelineRef.current.clientHeight
       ];
-
-      changeContext({
-        ...context,
-        timelineDimensions: { x, y },
-        axisPositions: { x, y: (y * 3) / 4 }
-      });
+      addTimelineDimensions(x, y);
     }
-    // eslint-disable-next-line
-  }, []);
+  }, [addTimelineDimensions]);
 
   return (
     <TimelineContainerStyled className="timeline-container" ref={timelineRef}>
       <XAxis
-        axisPositions={context.axisPositions}
-        timelineDimensions={context.timelineDimensions}
+        axisPositions={axisPositions}
+        timelineDimensions={timelineDimensions}
       />
-      {context.indexEvent && (
+      {indexEvent && (
         <Node
           indexNode={true}
-          cords={context.indexEvent.position}
-          color={context.indexEvent.color}
-          text={context.indexEvent.initials}
+          cords={indexEvent.position}
+          color={indexEvent.color}
+          text={indexEvent.initials}
         />
       )}
     </TimelineContainerStyled>
   );
-};
+});
