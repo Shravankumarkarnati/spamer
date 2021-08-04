@@ -1,11 +1,15 @@
 import styled from "@emotion/styled";
 import React from "react";
-import { Dimensions } from "./App";
 import {
   ARROW_HEAD_BUFFER_Y,
   ARROW_HEAD_BUFFER_X,
   AXIS_COLOR
-} from "./constants";
+} from "./utils/constants";
+
+interface Dimensions {
+  x: number;
+  y: number;
+}
 
 interface Props {
   axisPositions: Dimensions;

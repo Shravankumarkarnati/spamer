@@ -1,8 +1,20 @@
 import { values } from "mobx";
-import { types } from "mobx-state-tree";
-import { getInitials } from "./getInitials";
+import { cast, types } from "mobx-state-tree";
+import { getInitials } from "./utils/getInitials";
+import { getColor } from "./utils/getColor";
+import { getXCords } from "./utils/getXCords";
 import { v4 as uuid } from "uuid";
 import { createContext } from "react";
+
+type DataDefTimeText = "years" | "months" | "weeks" | "days" | null;
+type DataDefPosition = "before" | "after" | null;
+
+interface AddDataDefProps {
+  name: string;
+  timeNumber: number;
+  timeText: DataDefTimeText;
+  position: DataDefPosition;
+}
 
 const DataDefTime = types.model({
   number: types.number,
@@ -10,7 +22,8 @@ const DataDefTime = types.model({
     types.literal("years"),
     types.literal("months"),
     types.literal("weeks"),
-    types.literal("days")
+    types.literal("days"),
+    types.null
   )
 });
 
@@ -21,17 +34,18 @@ const Dimensions = types.model({
 
 const Node = types.model({
   id: types.string,
+  dataDefId: types.string,
   initials: types.string,
   position: Dimensions,
   color: types.string,
+  step: types.number,
+  labelText: types.string,
+  labelPosition: Dimensions,
   direction: types.union(
     types.literal("left"),
     types.literal("right"),
     types.null
-  ),
-  drawArrow: types.boolean,
-  step: types.number,
-  labelPosition: Dimensions
+  )
 });
 
 const IndexEvent = types.model({
@@ -61,10 +75,7 @@ export const RootStore = types
   })
   .views((self) => ({
     get totalNumberOfConnections() {
-      return values(self.nodes).reduce(
-        (acc, node) => acc + (node.drawArrow ? 1 : 0),
-        0
-      );
+      return values(self.nodes).length;
     },
     get axisPositions() {
       const { x, y } = self.timelineDimensions;
@@ -91,6 +102,45 @@ export const RootStore = types
           color: "#2bb1a7"
         };
       }
+    },
+    addDataDef({ name, timeNumber, timeText, position }: AddDataDefProps) {
+      if (timeText === null) {
+        timeNumber = 0;
+      }
+      const newDataDef = DataDef.create({
+        id: uuid(),
+        fullName: name,
+        position,
+        time: { number: timeNumber, type: timeText }
+      });
+
+      const allDataDefs = [...values(self.dataDefs), newDataDef];
+      self.dataDefs = cast(allDataDefs);
+      let direction: "left" | "right" | null;
+      if (position === "before") {
+        direction = "left";
+      } else if (position === "after") {
+        direction = "right";
+      } else {
+        direction = null;
+      }
+      const newNode = Node.create({
+        id: uuid(),
+        dataDefId: newDataDef.id,
+        labelText: `${newDataDef.time.number} ${newDataDef.time.type}`,
+        initials: getInitials(name),
+        position: { x: 0, y: self.axisPositions.y },
+        labelPosition: { x: 0, y: 0 },
+        color: getColor(),
+        direction,
+        step: 0
+      });
+
+      const allNodes = [...self.nodes, newNode];
+      const newNodes = getXCords(allNodes, self.axisPositions.x / 2);
+      console.log(allNodes, newNodes, ":(");
+
+      self.nodes = cast([...newNodes]);
     }
   }));
 

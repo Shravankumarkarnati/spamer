@@ -4,9 +4,13 @@ import {
   NODE_RADIUS,
   CONNECT_ARC_RADIUS,
   CONNECT_PATH_STROKE_WIDTH
-} from "./constants";
+} from "./utils/constants";
 import React, { useEffect, useMemo } from "react";
-import { Dimensions } from "./App";
+
+interface Dimensions {
+  x: number;
+  y: number;
+}
 
 interface Props {
   step: number;

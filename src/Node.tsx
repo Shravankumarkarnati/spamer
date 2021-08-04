@@ -1,7 +1,11 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { Dimensions } from "./App";
-import { NODE_RADIUS } from "./constants";
+import { NODE_RADIUS } from "./utils/constants";
+
+interface Dimensions {
+  x: number;
+  y: number;
+}
 
 interface Props {
   readonly cords: Dimensions;

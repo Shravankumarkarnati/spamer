@@ -15,7 +15,8 @@ export const Timeline = observer(() => {
     addTimelineDimensions,
     axisPositions,
     timelineDimensions,
-    indexEvent
+    indexEvent,
+    nodes
   } = useContext(TimelineStore);
 
   useEffect(() => {
@@ -42,6 +43,15 @@ export const Timeline = observer(() => {
           text={indexEvent.initials}
         />
       )}
+      {indexEvent &&
+        nodes.map((cur) => (
+          <Node
+            text={cur.initials}
+            key={cur.id}
+            color={cur.color}
+            cords={cur.position}
+          />
+        ))}
     </TimelineContainerStyled>
   );
 });
