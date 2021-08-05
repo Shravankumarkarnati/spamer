@@ -1,23 +1,14 @@
 import { INode } from "./getXCords";
 
 export const getSteps = (nodes: INode[], axisWidth: number) => {
-  const orderedXCords = nodes
-    .map((cur) => ({
-      id: cur.id,
-      xCord: cur.position.x,
-      step: cur.step,
-      initials: cur.initials
-    }))
-    .sort((a, b) => a.xCord - b.xCord);
-
-  const mid = orderedXCords.findIndex((cur) => cur.xCord >= axisWidth / 2);
-
-  const leftNodes = orderedXCords.slice(0, mid);
-  const rightNodes = orderedXCords.slice(mid);
-
-  leftNodes.sort((a, b) => b.xCord - a.xCord);
-
   const steps: Record<string, number> = {};
+
+  const leftNodes = nodes
+    .filter((cur) => cur.position.x < axisWidth / 2)
+    .sort((a, b) => b.position.x - a.position.x);
+  const rightNodes = nodes
+    .filter((cur) => cur.position.x >= axisWidth / 2)
+    .sort((a, b) => a.position.x - b.position.x);
 
   leftNodes.forEach((cur, index) => {
     steps[cur.id] = index + 1;

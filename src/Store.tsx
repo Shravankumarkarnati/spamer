@@ -178,7 +178,6 @@ const RootStore = types
 
         cur.setLabelPosition({ x, y });
       });
-      console.log(allNodes);
 
       self.nodes = cast(allNodes);
     }
