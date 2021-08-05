@@ -15,18 +15,17 @@ export const AddDataDef = observer(() => {
       className="btnContainer"
       onSubmit={(e) => {
         e.preventDefault();
-        const dataDef = {
+        addDataDef({
           name: dataDefName,
           timeNumber: dataDefTime,
           timeText:
             dataDefTimeText === "null" ? null : (dataDefTimeText as any),
           position: dataDefPosition === "null" ? null : (dataDefPosition as any)
-        };
+        });
         setDataDefName("");
         setDataDefTime(0);
         setDataDefTimeText("null");
         setDataDefPosition("null");
-        addDataDef(dataDef);
       }}
     >
       <label style={{ fontSize: ".5rem" }} htmlFor="select-dataDef-name">

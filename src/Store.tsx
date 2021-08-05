@@ -5,6 +5,7 @@ import { getColor } from "./utils/getColor";
 import { getXCords } from "./utils/getXCords";
 import { v4 as uuid } from "uuid";
 import { createContext } from "react";
+import { getSteps } from "./utils/getSteps";
 
 type DataDefTimeText = "years" | "months" | "weeks" | "days" | null;
 type DataDefPosition = "before" | "after" | null;
@@ -49,8 +50,11 @@ const Node = types
     )
   })
   .actions((self) => ({
-    addPositions({ x, y }: { x: number; y: number }) {
+    setPosition({ x, y }: { x: number; y: number }) {
       self.position = cast({ x, y });
+    },
+    setStep(step: number) {
+      self.step = cast(step);
     }
   }));
 
@@ -72,7 +76,7 @@ const DataDef = types.model({
   time: DataDefTime
 });
 
-export const RootStore = types
+const RootStore = types
   .model({
     dataDefs: types.array(DataDef),
     nodes: types.array(Node),
@@ -123,7 +127,7 @@ export const RootStore = types
       const allDataDefs = [...values(self.dataDefs), newDataDef];
       self.dataDefs = cast(allDataDefs);
 
-      // adding nodes and their xCords
+      // adding nodes, setting thier steps and xCords
       let direction: "left" | "right" | null;
       if (position === "before") {
         direction = "left";
@@ -146,10 +150,14 @@ export const RootStore = types
 
       let allNodes = [...self.nodes, newNode];
       const xCords = getXCords(allNodes, self.axisPositions.x);
-
       allNodes.forEach((cur) => {
-        cur.addPositions({ x: xCords[cur.id], y: self.axisPositions.y });
+        cur.setPosition({ x: xCords[cur.id], y: self.axisPositions.y });
       });
+      const steps = getSteps(allNodes, self.axisPositions.x);
+      allNodes.forEach((cur) => {
+        cur.setStep(steps[cur.id]);
+      });
+
       self.nodes = cast(allNodes);
     }
   }));

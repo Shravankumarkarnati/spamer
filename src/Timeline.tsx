@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { observer } from "mobx-react-lite";
 import { useContext, useEffect, useRef } from "react";
 import { Node } from "./Node";
+import { RenderNodes } from "./RenderNodes";
 import { TimelineStore } from "./Store";
 import { XAxis } from "./XAxis";
 
@@ -15,8 +16,7 @@ export const Timeline = observer(() => {
     addTimelineDimensions,
     axisPositions,
     timelineDimensions,
-    indexEvent,
-    nodes
+    indexEvent
   } = useContext(TimelineStore);
 
   useEffect(() => {
@@ -43,15 +43,7 @@ export const Timeline = observer(() => {
           text={indexEvent.initials}
         />
       )}
-      {indexEvent &&
-        nodes.map((cur) => (
-          <Node
-            text={cur.initials}
-            key={cur.id}
-            color={cur.color}
-            cords={cur.position}
-          />
-        ))}
+      {indexEvent && <RenderNodes />}
     </TimelineContainerStyled>
   );
 });

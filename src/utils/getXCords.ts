@@ -1,6 +1,6 @@
 import { Dimensions } from "../App";
 
-interface Node {
+export interface INode {
   id: string;
   dataDefId: string;
   initials: string;
@@ -34,7 +34,7 @@ const calcCordX = (axisWidth: number, maxTime: number, time: number) => {
   return sign ? cordX + axisWidth / 2 : cordX * sign;
 };
 
-export const getXCords = (nodes: Node[], axisWidth: number) => {
+export const getXCords = (nodes: INode[], axisWidth: number) => {
   const allTimes = nodes.map((cur) => {
     const [number, text] = cur.labelText.split(" ") as [
       string,
