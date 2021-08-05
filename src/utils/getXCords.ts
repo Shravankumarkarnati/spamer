@@ -1,26 +1,37 @@
-import { interpolateNumber, scaleDiverging } from "d3";
-import { Dimensions } from "../Context";
-import { NODE_RADIUS } from "./constants";
-import { getDays } from "./getDays";
+import { Dimensions } from "../App";
 
 interface Node {
   id: string;
   dataDefId: string;
   initials: string;
-  position: Dimensions;
   color: string;
   step: number;
   labelText: string;
+  position: Dimensions;
   labelPosition: Dimensions;
   direction: "left" | "right" | null;
 }
 
-const getXCordScale = (axisWidth: number, maxTime: number) => {
-  return scaleDiverging()
-    .domain([-maxTime, 0, maxTime])
-    .interpolator(
-      interpolateNumber(NODE_RADIUS * 2.5, axisWidth - NODE_RADIUS * 2.5)
-    );
+const mapper = {
+  years: 365,
+  months: 30,
+  weeks: 7,
+  days: 1
+};
+
+const getDays = (
+  text: "years" | "months" | "weeks" | "days" | null,
+  number: number
+) => {
+  if (text === null) return 0;
+  return number * mapper[text];
+};
+
+const calcCordX = (axisWidth: number, maxTime: number, time: number) => {
+  const axisUnit = (axisWidth - axisWidth * 0.15) / (maxTime * 2);
+  const cordX = axisUnit * time;
+  const sign = Math.sign(cordX);
+  return sign ? cordX + axisWidth / 2 : cordX * sign;
 };
 
 export const getXCords = (nodes: Node[], axisWidth: number) => {
@@ -32,19 +43,23 @@ export const getXCords = (nodes: Node[], axisWidth: number) => {
     const time = getDays(text, parseInt(number, 10));
     return time;
   });
+
   const maxTime = Math.max(...allTimes);
-  const xScale = getXCordScale(axisWidth, maxTime);
-  const newNodes = nodes.map((cur) => {
+  const xCords: Record<string, number> = {};
+  nodes.forEach((cur) => {
     const [number, text] = cur.labelText.split(" ") as [
       string,
       "years" | "months" | "weeks" | "days" | null
     ];
+
     const time = getDays(text, parseInt(number, 10));
-    const nodeData = {
-      ...cur,
-      position: { ...cur.position, x: xScale(time) }
-    };
-    return nodeData;
+    let cordX;
+    if (cur.direction === "left") {
+      cordX = calcCordX(axisWidth, maxTime, -time);
+    } else {
+      cordX = calcCordX(axisWidth, maxTime, time);
+    }
+    xCords[cur.id] = cordX;
   });
-  return newNodes;
+  return xCords;
 };

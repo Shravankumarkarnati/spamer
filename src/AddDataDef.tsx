@@ -15,18 +15,18 @@ export const AddDataDef = observer(() => {
       className="btnContainer"
       onSubmit={(e) => {
         e.preventDefault();
-        addDataDef({
+        const dataDef = {
           name: dataDefName,
           timeNumber: dataDefTime,
           timeText:
             dataDefTimeText === "null" ? null : (dataDefTimeText as any),
           position: dataDefPosition === "null" ? null : (dataDefPosition as any)
-        });
-
+        };
         setDataDefName("");
         setDataDefTime(0);
         setDataDefTimeText("null");
         setDataDefPosition("null");
+        addDataDef(dataDef);
       }}
     >
       <label style={{ fontSize: ".5rem" }} htmlFor="select-dataDef-name">
@@ -54,7 +54,7 @@ export const AddDataDef = observer(() => {
       </label>
       <select
         id="select-dataDef-timeText"
-        defaultValue={dataDefTimeText}
+        value={dataDefTimeText}
         onChange={(e) => {
           const value = e.target.value;
           setDataDefTimeText(value);
@@ -71,7 +71,7 @@ export const AddDataDef = observer(() => {
       </label>
       <select
         id="select-dataDef-position"
-        defaultValue={dataDefPosition}
+        value={dataDefPosition}
         onChange={(e) => {
           const value = e.target.value;
           setDataDefPosition(value);

@@ -32,21 +32,27 @@ const Dimensions = types.model({
   y: types.number
 });
 
-const Node = types.model({
-  id: types.string,
-  dataDefId: types.string,
-  initials: types.string,
-  position: Dimensions,
-  color: types.string,
-  step: types.number,
-  labelText: types.string,
-  labelPosition: Dimensions,
-  direction: types.union(
-    types.literal("left"),
-    types.literal("right"),
-    types.null
-  )
-});
+const Node = types
+  .model({
+    id: types.string,
+    dataDefId: types.string,
+    initials: types.string,
+    position: Dimensions,
+    color: types.string,
+    step: types.number,
+    labelText: types.string,
+    labelPosition: Dimensions,
+    direction: types.union(
+      types.literal("left"),
+      types.literal("right"),
+      types.null
+    )
+  })
+  .actions((self) => ({
+    addPositions({ x, y }: { x: number; y: number }) {
+      self.position = cast({ x, y });
+    }
+  }));
 
 const IndexEvent = types.model({
   id: types.string,
@@ -116,6 +122,8 @@ export const RootStore = types
 
       const allDataDefs = [...values(self.dataDefs), newDataDef];
       self.dataDefs = cast(allDataDefs);
+
+      // adding nodes and their xCords
       let direction: "left" | "right" | null;
       if (position === "before") {
         direction = "left";
@@ -129,18 +137,20 @@ export const RootStore = types
         dataDefId: newDataDef.id,
         labelText: `${newDataDef.time.number} ${newDataDef.time.type}`,
         initials: getInitials(name),
-        position: { x: 0, y: self.axisPositions.y },
+        position: { x: 0, y: 0 },
         labelPosition: { x: 0, y: 0 },
         color: getColor(),
         direction,
         step: 0
       });
 
-      const allNodes = [...self.nodes, newNode];
-      const newNodes = getXCords(allNodes, self.axisPositions.x / 2);
-      console.log(allNodes, newNodes, ":(");
+      let allNodes = [...self.nodes, newNode];
+      const xCords = getXCords(allNodes, self.axisPositions.x);
 
-      self.nodes = cast([...newNodes]);
+      allNodes.forEach((cur) => {
+        cur.addPositions({ x: xCords[cur.id], y: self.axisPositions.y });
+      });
+      self.nodes = cast(allNodes);
     }
   }));
 
