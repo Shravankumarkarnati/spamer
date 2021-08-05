@@ -1,9 +1,11 @@
+import { SvgStyled } from "./XAxis";
 import {
   CONNECT_STEP_GUTTER,
   NODE_RADIUS,
   CONNECT_ARC_RADIUS,
   CONNECT_PATH_STROKE_WIDTH
-} from "./constants";
+} from "./utils/constants";
+import React from "react";
 
 interface Props {
   step: number;
@@ -13,6 +15,8 @@ interface Props {
   axisY: number;
   color: string;
   totalNumberOfConnections: number;
+  axisWidth: number;
+  text: string;
 }
 
 export const Connect = ({
@@ -22,7 +26,9 @@ export const Connect = ({
   targetNodeX,
   axisY,
   color,
-  totalNumberOfConnections
+  totalNumberOfConnections,
+  axisWidth,
+  text
 }: Props) => {
   const stepMargin = step * CONNECT_STEP_GUTTER;
   const headMargin = (step * NODE_RADIUS) / (totalNumberOfConnections / 2 + 1); // nodes.length / 2 + 1
@@ -56,40 +62,21 @@ export const Connect = ({
   // indexNodeHead-step -> targetNode-step
   // targetNode-step -> targetNode
 
-  const pathD = `M${indexHead},${yCord}  v${-verticalLength} 
-  ${arcs[0]}
-  h${horizontalLength}
-  ${arcs[1]}
-  v${verticalLength}`;
+  const pathD = ` M${indexHead},${yCord} 
+                  v${-verticalLength} 
+                  ${arcs[0]}
+                  h${horizontalLength}
+                  ${arcs[1]}
+                  v${verticalLength}`;
 
   return (
-    <svg>
+    <SvgStyled viewBox={`0 0 ${axisWidth} ${yCord}`}>
       <path
         d={pathD}
         fill="none"
         stroke={color}
         strokeWidth={CONNECT_PATH_STROKE_WIDTH}
       />
-      {/* {color === "#e31a1c" && (
-        <>
-          <rect
-            x={horizontalLength / 2 + indexHead - 16}
-            y={yCord - verticalLength - 16}
-            width={80}
-            height={20}
-            rx={10}
-            fill={color}
-          />
-          <text
-            x={horizontalLength / 2 + indexHead}
-            y={yCord - verticalLength}
-            fontSize="0.5rem"
-            fill="white"
-          >
-            {color}
-          </text>
-        </>
-      )} */}
-    </svg>
+    </SvgStyled>
   );
 };

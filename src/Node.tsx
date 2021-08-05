@@ -1,67 +1,113 @@
 import styled from "@emotion/styled";
-import { Dimensions } from "./App";
-import {
-  NODE_TEXT_FONT_SIZE,
-  NODE_RADIUS,
-  INDEX_NODE_RADIUS
-} from "./constants";
+import { useState } from "react";
+import { NODE_RADIUS } from "./utils/constants";
+
+interface Dimensions {
+  x: number;
+  y: number;
+}
 
 interface Props {
   readonly cords: Dimensions;
   readonly text: string;
   readonly color: string;
+  readonly labelDimensions?: Dimensions;
+  readonly labelText?: string;
   readonly indexNode?: boolean;
 }
 
-interface NodeSVGStyledProps {
+interface NodeStyledProps {
   readonly color: string;
+  readonly top: number;
+  readonly left: number;
+  readonly index?: boolean;
 }
 
-const NodeStyled = styled.circle(({ color }: NodeSVGStyledProps) => ({
-  textTransform: "uppercase",
-  fill: color
+const NodeStyled = styled.div(
+  ({ color, top, left, index = false }: NodeStyledProps) => ({
+    backgroundColor: color,
+    color: "#fff",
+    fontSize: ".5rem",
+    textTransform: "uppercase",
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: index ? NODE_RADIUS * 2.5 : NODE_RADIUS * 2,
+    height: index ? NODE_RADIUS * 2.5 : NODE_RADIUS * 2,
+    borderRadius: index ? "5px" : "50%",
+
+    position: "absolute",
+    top,
+    left,
+    zIndex: 2,
+    transform: "translate(-50%,-50%)",
+    cursor: "pointer",
+
+    "&:hover": {
+      transform: "translate(-50%,-50%) scale(1.1)",
+      zIndex: 100
+    }
+  })
+);
+
+interface LabelStyledProps {
+  top: number;
+  left: number;
+  color: string;
+}
+
+const LabelStyled = styled.span(({ top, left, color }: LabelStyledProps) => ({
+  position: "absolute",
+  top,
+  left,
+  fontSize: ".5rem",
+  color: "white",
+  backgroundColor: color,
+  padding: ".2rem .5rem",
+  borderRadius: ".5rem",
+  transform: "translate(-50%,-140%)",
+  zIndex: 3
 }));
 
-const IndexNodeStyled = styled.rect(({ color }: NodeSVGStyledProps) => ({
-  textTransform: "uppercase",
-  fill: color
-}));
-
-const TextStyled = styled.text({
-  textTransform: "uppercase",
-  fill: "white",
-  fontSize: `${NODE_TEXT_FONT_SIZE}px`
-});
-
-export const Node = ({ cords, text, color, indexNode = false }: Props) => {
+export const Node = ({
+  cords,
+  text,
+  color,
+  labelDimensions,
+  labelText,
+  indexNode = false
+}: Props) => {
   const nodeId = `timeline-node-${text}`;
+  const [focused, setFocused] = useState(false);
 
   return (
-    <g>
-      {indexNode ? (
-        <IndexNodeStyled
-          width={INDEX_NODE_RADIUS * 2}
-          height={INDEX_NODE_RADIUS * 2}
-          color={color}
-          x={cords.x - INDEX_NODE_RADIUS}
-          y={cords.y - INDEX_NODE_RADIUS}
-          rx={5}
-        />
-      ) : (
-        <NodeStyled
-          id={nodeId}
-          color={color}
-          cx={cords.x}
-          cy={cords.y}
-          r={NODE_RADIUS}
-        />
-      )}
-      <TextStyled
-        x={cords.x - NODE_TEXT_FONT_SIZE / 2}
-        y={cords.y + NODE_TEXT_FONT_SIZE / 4}
+    <>
+      <NodeStyled
+        id={nodeId}
+        index={indexNode}
+        color={color}
+        top={cords.y}
+        left={cords.x}
+        onMouseEnter={() => {
+          setFocused(true);
+        }}
+        onMouseLeave={() => {
+          setFocused(false);
+        }}
       >
         {text}
-      </TextStyled>
-    </g>
+      </NodeStyled>
+      {labelDimensions && focused && (
+        <LabelStyled
+          id="node-label"
+          top={labelDimensions.y}
+          left={labelDimensions.x}
+          color={color}
+        >
+          {labelText}
+        </LabelStyled>
+      )}
+    </>
   );
 };
