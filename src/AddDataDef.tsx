@@ -29,7 +29,7 @@ export const AddDataDef = observer(() => {
       }}
     >
       <label style={{ fontSize: ".5rem" }} htmlFor="select-dataDef-name">
-        Select Datadef Name:
+        Datadef Name:
       </label>
       <input
         type="text"
@@ -39,7 +39,7 @@ export const AddDataDef = observer(() => {
         onChange={(e) => setDataDefName(e.target.value)}
       />
       <label style={{ fontSize: ".5rem" }} htmlFor="select-dataDef-timeNumber">
-        Select Time Text:
+        Time Number:
       </label>
       <input
         type="number"
@@ -49,7 +49,7 @@ export const AddDataDef = observer(() => {
         onChange={(e) => setDataDefTime(parseInt(e.target.value, 10))}
       />
       <label style={{ fontSize: ".5rem" }} htmlFor="select-dataDef-timeText">
-        Select Time Text:
+        Time Type:
       </label>
       <select
         id="select-dataDef-timeText"
@@ -66,7 +66,7 @@ export const AddDataDef = observer(() => {
         <option value="days">Days</option>
       </select>
       <label style={{ fontSize: ".5rem" }} htmlFor="select-dataDef-position">
-        Select Datadef position:
+        Datadef position:
       </label>
       <select
         id="select-dataDef-position"

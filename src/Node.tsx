@@ -12,6 +12,7 @@ interface Props {
   readonly text: string;
   readonly color: string;
   readonly labelDimensions?: Dimensions;
+  readonly labelText?: string;
   readonly indexNode?: boolean;
 }
 
@@ -63,8 +64,9 @@ const LabelStyled = styled.span(({ top, left, color }: LabelStyledProps) => ({
   fontSize: ".5rem",
   color: "white",
   backgroundColor: color,
-  padding: ".5rem",
-  transform: "translate(-50%,-50%)",
+  padding: ".2rem .5rem",
+  borderRadius: ".5rem",
+  transform: "translate(-50%,-140%)",
   zIndex: 3
 }));
 
@@ -73,6 +75,7 @@ export const Node = ({
   text,
   color,
   labelDimensions,
+  labelText,
   indexNode = false
 }: Props) => {
   const nodeId = `timeline-node-${text}`;
@@ -102,7 +105,7 @@ export const Node = ({
           left={labelDimensions.x}
           color={color}
         >
-          {text}
+          {labelText}
         </LabelStyled>
       )}
     </>

@@ -5,12 +5,7 @@ import {
   CONNECT_ARC_RADIUS,
   CONNECT_PATH_STROKE_WIDTH
 } from "./utils/constants";
-import React, { useEffect, useMemo } from "react";
-
-interface Dimensions {
-  x: number;
-  y: number;
-}
+import React from "react";
 
 interface Props {
   step: number;
@@ -22,9 +17,6 @@ interface Props {
   totalNumberOfConnections: number;
   axisWidth: number;
   text: string;
-  SetLabelPoints: React.Dispatch<
-    React.SetStateAction<Record<string, Dimensions>>
-  >;
 }
 
 export const Connect = ({
@@ -36,7 +28,6 @@ export const Connect = ({
   color,
   totalNumberOfConnections,
   axisWidth,
-  SetLabelPoints,
   text
 }: Props) => {
   const stepMargin = step * CONNECT_STEP_GUTTER;
@@ -70,29 +61,13 @@ export const Connect = ({
   // indexNodeHead -> indexNodeHead-step
   // indexNodeHead-step -> targetNode-step
   // targetNode-step -> targetNode
-  const labelPoints = useMemo(
-    () => ({
-      text: {
-        x: targetHead - horizontalLength / 2,
-        y: yCord - verticalLength
-      }
-    }),
-    [horizontalLength, verticalLength, yCord, targetHead]
-  );
 
-  useEffect(() => {
-    SetLabelPoints((prev) => {
-      const newObj = { ...prev };
-      newObj[text] = labelPoints.text;
-      return newObj;
-    });
-  }, [labelPoints, SetLabelPoints, text]);
-
-  const pathD = `M${indexHead},${yCord}  v${-verticalLength} 
-  ${arcs[0]}
-  h${horizontalLength}
-  ${arcs[1]}
-  v${verticalLength}`;
+  const pathD = ` M${indexHead},${yCord} 
+                  v${-verticalLength} 
+                  ${arcs[0]}
+                  h${horizontalLength}
+                  ${arcs[1]}
+                  v${verticalLength}`;
 
   return (
     <SvgStyled viewBox={`0 0 ${axisWidth} ${yCord}`}>

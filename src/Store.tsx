@@ -6,6 +6,8 @@ import { getXCords } from "./utils/getXCords";
 import { v4 as uuid } from "uuid";
 import { createContext } from "react";
 import { getSteps } from "./utils/getSteps";
+import { CONNECT_STEP_GUTTER } from "./utils/constants";
+import { Dimensions as IDimensions } from "./App";
 
 type DataDefTimeText = "years" | "months" | "weeks" | "days" | null;
 type DataDefPosition = "before" | "after" | null;
@@ -50,11 +52,14 @@ const Node = types
     )
   })
   .actions((self) => ({
-    setPosition({ x, y }: { x: number; y: number }) {
-      self.position = cast({ x, y });
+    setPosition(dimensions: IDimensions) {
+      self.position = cast(dimensions);
     },
     setStep(step: number) {
       self.step = cast(step);
+    },
+    setLabelPosition(dimensions: IDimensions) {
+      self.labelPosition = cast(dimensions);
     }
   }));
 
@@ -157,6 +162,23 @@ const RootStore = types
       allNodes.forEach((cur) => {
         cur.setStep(steps[cur.id]);
       });
+
+      allNodes.forEach((cur) => {
+        const mid = self.axisPositions.x / 2;
+        const halfOfDifference =
+          (cur.direction === "right"
+            ? cur.position.x - mid
+            : mid - cur.position.x) / 2;
+
+        const x =
+          cur.direction === "right"
+            ? mid + halfOfDifference
+            : mid - halfOfDifference;
+        const y = cur.position.y - cur.step * CONNECT_STEP_GUTTER;
+
+        cur.setLabelPosition({ x, y });
+      });
+      console.log(allNodes);
 
       self.nodes = cast(allNodes);
     }
